@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@font-face {
+    font-family: headers;
+    src: url(../assets/Crustaceans-SignatureDEMO-Regular.otf) format("opentype");
+}
+
+:root {
+    --accent:#ECB814;
+    --accent-hover:#e0b119;
+    --bg:#4F3D35;
+    --text-primary:#3e3307;
+    --border:#CBB8A0;
+    --surface:#F6D579;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.button {
+    background-color: var(--accent);
+    text-decoration: none;
+    color:var(--text-primary);
+    padding: 1em;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.505);
+    transition: all 0.125s ease-out;
+    border: none;
+    border-left: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+    font-family: Roboto;
+}
+
+.button:hover {
+    background-color: var(--accent-hover);
+    cursor: pointer;
+}
+.button:active {
+    border-left: 2px solid transparent;
+    border-bottom: 2px solid transparent;   
+    box-shadow: none;
+}
+
+
+
+header {
+    display: flex;
+    background-color: var(--accent);
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 12.5vw;
+    padding-right: 12.5vw;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    color: var(--text-primary);
+    font-family: headers;
+}
+
+header > div {
+    display: flex;
+    flex-grow: 0.25;
+    justify-content: space-between  ;
+    align-items: center;
+}
+
+header > div > a {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: larger;
+    font-weight: bold;
+    padding: 0.5em;
+
+}
+
+footer {
+    display: flex;
+    background-color: var(--accent);
+    color: var(--text-primary);
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 12.5vw;
+    padding-right: 12.5vw;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    font-family: headers;
+
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+main {   
+    flex-grow: 1;
+}
+
+@keyframes surface-loading {
+    from {
+        background-position:200% 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
+}
+
+#selected {
+border-radius: 20px;
+background-color: var(--surface);
+}
+
+#inactivebtn {
+    background-color: gray  ;
+    border: none;
+    box-shadow: none;
+    pointer-events: none;
+}

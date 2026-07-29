@@ -1,0 +1,25 @@
+const express = require("express")
+const signupRouter = require("./src/routes/signupRouter")
+const loginRouter = require("./src/routes/loginRouter")
+const postRouter = require("./src/routes/postRouter")
+const app = express()
+
+
+app.use(express.json())
+app.use("/signup",signupRouter)
+app.use("/login",loginRouter )
+app.use("/post",postRouter)
+// app.use("/post/comments")
+
+
+app.use((err, req, res, next) => {
+  console.log(err.message)
+  res.status(err.statusCode);
+  res.json({code:err.statusCode,message:err.message});
+})
+app.listen(8585 , err => {
+    if(!err) 
+        console.log("Running on 8585")
+    else
+        throw Error(err)
+})

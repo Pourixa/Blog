@@ -1,0 +1,58 @@
+main {
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: fit-content;
+    height: fit-content;
+    padding: 1em;
+    gap: 0.5em;
+    background-color: var(--surface);
+    border: 5px solid var(--border);
+    border-radius: 10px;
+    font-size: x-large;
+    font-family: roboto;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+form > button {
+    margin-top: 1em;
+}
+
+form > input {
+    padding: 1em;
+    border-radius: 5px;
+    border: none;
+}
+
+form > input:focus {
+outline: 2px var(--border) solid;
+}
+
+#alert {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 1em;
+    margin-right: 1em;
+    padding: 1em;
+    border-radius: 10px;
+    border: var(--border) 2px solid;
+    font-family: roboto;
+    font-weight: bold;
+    transform: translate(calc(100% + 1em) , 0);
+    transition: all 0.2s ease-out;
+    display: none;
+}
+
+#alert.show {
+    display: block;
+    transform: translate(0 , 0);
+
+}
