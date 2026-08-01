@@ -1,9 +1,10 @@
 import { Link } from "react-router";
 
-export default function Header({location,isSignedIn}) {
+export default function Header({location}) {
+    const token = localStorage.getItem("token")
     return <header>
         <h1>POURBLOG</h1>
-        {!isSignedIn ? <div>
+        {!token ? <div>
             <Link to={"login"} id={location.pathname === "/login" ? "selected" : ""}>
             LOG IN
             </Link>
@@ -11,7 +12,7 @@ export default function Header({location,isSignedIn}) {
             SIGN UP
             </Link>
         </div> : <div>
-            <Link to={"logout"}>
+            <Link onClick={localStorage.clear}>
             LOG OUT
             </Link>
         </div>}

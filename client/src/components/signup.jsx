@@ -1,42 +1,38 @@
 import "../styles/signup.css"
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import makeURL from "../../lib/url";
 export default function Signup()
 {
-  const [result, setResult] = useState(null);
+  const temp = {status:null,message:""}
+  const [result, setResult] = useState(temp);
+  const navigate = useNavigate();
   async function handleSubmit(e) {
 
     e.preventDefault();
+    setResult(prev => {return {...prev , status:0}});
+    const formData = new FormData(e.target)
+    const res = await fetch(makeURL("/signup"),{method:"post",headers:{
+      "Content-Type":"application/json"
+    },body:JSON.stringify(Object.fromEntries(formData.entries()))})
 
-    setResult(0);
+
+    const js = await res.json()
+    setResult({status:res.status,message:js.message})
+    if (res.status === 200) {
+  setTimeout(() => {
+    setResult(prev => ({ ...prev, status: 1 }));
     setTimeout(() => {
-        setResult(200)
-    },3000)
+      navigate("/login");
+    }, 1500);
+  }, 1500);
+}
   }
 
-  const navigate = useNavigate();
-useEffect(() => {
-  if (result === 200) {
-    const timer = setTimeout(() => {
-      setResult(1);
-    }, 3000);
+let alertMessage;
+let backgroundColor;
 
-    return () => clearTimeout(timer);
-  }
-
-  if (result === 1) {
-    const timer = setTimeout(() => {
-      navigate("/");
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }
-}, [result, navigate]);
-
-let alertMessage = "";
-let backgroundColor = "";
-
-switch (result) {
+switch (result.status) {
   case 0:
     alertMessage = "Processing...";
     backgroundColor = "gray";
@@ -51,16 +47,26 @@ switch (result) {
     alertMessage = "Redirecting...";
     backgroundColor = "gray";
     break;
+  default:
+    if(result.status)
+    {
+    alertMessage = "Signup not Successful! - " + result.message;
+    backgroundColor = "red";
+    setTimeout(() => {
+      setResult({status:null,message:""})
+    },2500)
+  }
+    break;
 }
   return <main>
     
-    <div id="alert" className= {result!= null ? "show" : ""} style={{backgroundColor:backgroundColor}}>
+    <div id="alert" className= {result.status!= null ? "show" : ""} style={{backgroundColor:backgroundColor}}>
         {alertMessage}
     </div>
     <form onSubmit={handleSubmit}>
     <input placeholder="Username" type="text" name="username" id="username" minLength={3} pattern="^[a-zA-Z0-9]+([_ \-]?[a-zA-Z0-9])*$" maxLength={255} required/>
     <input placeholder="Password" type="password" name="password" id="password" minLength={8} required/>
-    <button className="button" id= {result!= null ? "inactivebtn" : ""}>
+    <button className="button" id= {result.status != null ? "inactivebtn" : ""}>
         SIGN UP
     </button>
     </form>

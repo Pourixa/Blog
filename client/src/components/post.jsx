@@ -49,20 +49,30 @@ return <main>
             return <Comment comment={comment} key={comment.id}/>
         } )}
         </>}
-        <form method="post" action={makeURL("/post/"+params.id+"/comments")}>
-            <textarea required name="text" id="comment" placeholder="NEW COMMENT"></textarea>
-            <button className="button">COMMENT </button>
-        </form>
-    </div>
-            <button className="button" onClick={async () => {
-            const res = await fetch(makeURL('/post/' + params.id + "/like"), {method:"post"})
+        <form method="post" action={makeURL("/post/"+params.id+"/comments")} onSubmit={async (e) => {
+            e.preventDefault()
+            const data = new FormData(e.target)
+            const res = await fetch(makeURL('/post/'+params.id+'/comments'),{method:"post",headers:{"Content-Type":"application/json" , "Authorization": "Bearer " + localStorage.getItem("token")},body:JSON.stringify(Object.fromEntries(data.entries()))})
             if (res.ok)
                 location.reload()
             else if (res.status === 401)
                 location.href = "/login"
             else
                 throw new Error()
-        }}>LIKE THIS POST</button>
+        }}>
+            <textarea required name="text" id="comment" placeholder="NEW COMMENT"></textarea>
+            <button className="button">COMMENT </button>
+        </form>
+    </div>
+    <button className="button" onClick={async () => {
+            const res = await fetch(makeURL('/post/' + params.id + "/like"), {method:"post",headers:{"Content-Type":"application/json" , "Authorization": "Bearer " + localStorage.getItem("token")}})
+            if (res.ok)
+                location.reload()
+            else if (res.status === 401)
+                location.href = "/login"
+            else
+                throw new Error()
+        }}>SHOW YOUR LOVE FOR THIS POST</button>
     </div>}
 </main>
 }
