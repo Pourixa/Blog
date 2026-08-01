@@ -3,12 +3,7 @@ import hero from "../assets/hero.png"
 import BlogHolder from "./blogHolder"
 import { useEffect, useState } from "react"
 import Blog from "./blogComponent"
-
-function makeURL(path)
-{
-    return import.meta.env.VITE_API_URL + path
-}
-
+import makeURL from "../../lib/url"
 
 
 export default function Home() {
@@ -19,7 +14,6 @@ export default function Home() {
         async function getBlogs()  {
             const data =await fetch(makeURL('/post'))
             if (data.ok) {
-            console.log(data)
             setBlogs(await data.json())
             setLoading(false)
             } else {
