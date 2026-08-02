@@ -33,15 +33,12 @@ loginRouter.post("/",body("username")
                     username:req.body.username,
                 }
             })
-            if(!user)
-                next(new err("Username or password is invalid.",401))
-            if(!(await bcrypt.compare(req.body.password,user.password)))
-                next(new err("Username or password is invalid.",401))
-            else{
-                user.password = null;
-                const token = jwt.sign(user,process.env.SECRET_KEY,{expiresIn:"7d"} )
-                res.status(200).json({token:token})
-            }
+            if(!user || !(await bcrypt.compare(req.body.password,user.password)))
+                return next(new err("Username or password is invalid.",401))
+
+            user.password = null;
+            const token = jwt.sign(user,process.env.SECRET_KEY,{expiresIn:"7d"} )
+            return res.status(200).json({token:token})
         }
         
     } catch(e)

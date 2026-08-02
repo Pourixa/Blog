@@ -4,14 +4,25 @@ const err = require("../lib/error")
 const db = require("../lib/prisma")
 const {authenticateToken} = require("../middleware/auth")
 const {jwtDecode} = require("jwt-decode")
-postRouter.get("/",async (req,res,next) => {
+
+function getDecodedUser(req) {
     const token = req.headers.authorization?.split(" ")[1]
+    if (!token) return null
+
     try {
-        if(token && jwtDecode(token).isAuthor)
-            posts = await db.prisma.post.findMany();
-        else 
-            posts = await db.prisma.post.findMany({where:{isPublic:true}});
-    res.json(posts)
+        return jwtDecode(token)
+    } catch {
+        return null
+    }
+}
+
+postRouter.get("/",async (req,res,next) => {
+    try {
+        const user = getDecodedUser(req)
+        const posts = user?.isAuthor
+            ? await db.prisma.post.findMany()
+            : await db.prisma.post.findMany({where:{isPublic:true}})
+        res.json(posts)
     }catch(e) {
         console.log(e)
         next(new err("Something went wrong." , 500))
@@ -42,14 +53,16 @@ postRouter.get("/:id/comments", async (req, res, next) => {
 
 postRouter.get("/:id",async (req,res,next) => {
     try {
-        const token = req.headers.authorization
         const post = await db.prisma.post.findUnique({where:{id:parseInt(req.params.id)}});
-        if(post.isPublic)
-            res.json(post)
-        else if(token && jwtDecode(token).isAuthor)
-            res.json(post)
-        else
-            next(new err("NOT FOUND",404))
+        if (!post) {
+            return next(new err("NOT FOUND",404))
+        }
+
+        const user = getDecodedUser(req)
+        if(post.isPublic || user?.isAuthor)
+            return res.json(post)
+
+        return next(new err("NOT FOUND",404))
     }catch(e) {
         next(new err("Something went wrong." , 500))
     }
