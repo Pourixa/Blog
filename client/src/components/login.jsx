@@ -51,7 +51,7 @@ switch (result.status) {
   default:
     if(result.status)
     {
-    alertMessage = "Signup not Successful! - " + result.message;
+    alertMessage = "Login not Successful! - " + result.message;
     backgroundColor = "red";
     setTimeout(() => {
       setResult({status:null,message:""})

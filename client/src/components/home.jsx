@@ -26,7 +26,7 @@ export default function Home() {
     return <main>
         <div id="hero">
             <img src={hero} alt="hero" />
-            <a href="#blogsList" className="button">READ MORE</a>
+            <a href="#blogsList" className="button">READ NOW</a>
         </div>
         <div id="blogsList">
             {loading ? <><BlogHolder/><BlogHolder/><BlogHolder/><BlogHolder/><BlogHolder/> </>: blogs.map(blog => {

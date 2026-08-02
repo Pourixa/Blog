@@ -57,7 +57,7 @@ return <main>
             const res = await fetch(makeURL('/post/'+params.id+'/comments'),{method:"post",headers:{"Content-Type":"application/json" , "Authorization": "Bearer " + localStorage.getItem("token")},body:JSON.stringify(Object.fromEntries(data.entries()))})
             if (res.ok)
                 location.reload()
-            else if (res.status === 401)
+            else if (res.status === 401 || res.status === 403)
                 location.href = "/login"
             else
                 throw new Error()
