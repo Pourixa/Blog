@@ -1,0 +1,111 @@
+#postView {
+    justify-content: unset;
+    align-items: unset;
+    padding: 1em;
+    color: var(--text-primary);
+    background-color: var(--surface);
+    height: 100%;
+    margin: 2em;
+    width: 90%;
+    border-radius: 10px;
+    font-family: roboto;
+    line-height: 1.5;
+    text-align: justify;
+    border: 5px var(--border) solid;
+}
+
+#postView > p {
+    padding: 1em;
+}
+
+#postView > div:first-of-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#postView > div:first-of-type  > div > span {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+#postView > div:first-of-type  > div     {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+#postView > h4 {
+    margin-left: auto;
+    color: var(--text-mute);
+}
+
+#postView  input {
+    font-size: 1em;
+    padding: 0.5em;
+}
+
+.comments {
+    border: 2px var(--border) dashed;
+    width: 100%;
+    
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 1em;
+    margin-top: 1em;
+    gap: 5px;
+    border-radius: 10px;
+}
+
+.comments > form {
+    border: none;
+    width: 100%;
+}
+.comments > form >textarea {
+        background-color: var(--surface);
+    border: var(--border) 2px solid;
+    padding: 1em;
+    height: 200px;
+    resize: none;
+    line-height: 1.5;
+    font-family: roboto;
+}
+.comment {
+    width: calc(100% - 4em);
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    border: var(--border) 2px solid;
+    border-radius: 10px;
+}
+
+
+.comment > div:last-of-type {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 2em;
+}
+
+.comment > div:first-of-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+#postView > button {
+margin-top: 2em;}
+
+#loading {
+    width: 100px;
+    height: 100px;
+    animation: turn 1s ease  infinite forwards ;
+}
+
+@keyframes turn {
+    to{
+        transform: rotate(360deg);
+    }
+}

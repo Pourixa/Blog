@@ -5,6 +5,7 @@ import App from './App.jsx'
 import New from './components/newBlog.jsx'
 import Manage from './components/manageBlog.jsx'
 import Login from './login.jsx'
+import Post from './components/post.jsx'
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,8 @@ const router = createBrowserRouter([
     element:<App/>,
     children:[
       {index:true , element:<Manage/>},
-      {path:'/new' , element:<New/>}
+      {path:'/new' , element:<New/>},
+      {path:'/post/:id',element:<Post/>}
     ],
   },
   {
