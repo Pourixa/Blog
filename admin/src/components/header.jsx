@@ -15,6 +15,9 @@ export default function Header() {
             <Link onClick={() => {localStorage.clear();location.reload()}}>
             LOG OUT
             </Link>
+            <Link to={"/new"}>
+                New Blog
+            </Link>
         </div>}
     </header>
 }

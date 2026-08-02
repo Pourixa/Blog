@@ -1,69 +1,74 @@
 
-import { Navigate, useOutletContext } from "react-router"
+import { Navigate } from "react-router"
 import { Editor } from '@tinymce/tinymce-react';
 import "../styles/newBlog.css"
-import { useEffect,useState } from "react";
+import {useState } from "react";
 import { useNavigate } from "react-router";
+import makeURL from "../../lib/url";
 export default function New() {
-    const [result, setResult] = useState(null);
+  const temp = {status:null,message:""}
+  const [result, setResult] = useState(temp);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("admintoken")
   async function handleSubmit(e) {
 
-    e.preventDefault();
-
-    setResult(0);
+      e.preventDefault();
+      setResult(prev => {return {...prev , status:0}});
+      const formData = new FormData(e.target)
+      const res = await fetch(makeURL("/post"),{method:"post",headers:{
+        "Content-Type":"application/json","Authorization" : "Bearer "+token
+      },body:JSON.stringify(Object.fromEntries(formData.entries()))})
+  
+  
+      const js = await res.json()
+      setResult({status:res.status,message:js.message})
+      if (res.status === 200) {
     setTimeout(() => {
-        setResult(200)
-    },3000)
+      setResult(prev => ({ ...prev, status: 1 }));
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    }, 1500);
   }
-
-  const navigate = useNavigate();
-useEffect(() => {
-  if (result === 200) {
-    const timer = setTimeout(() => {
-      setResult(1);
-    }, 3000);
-
-    return () => clearTimeout(timer);
+    }
+  
+  let alertMessage;
+  let backgroundColor;
+  
+  switch (result.status) {
+    case 0:
+      alertMessage = "Processing...";
+      backgroundColor = "gray";
+      break;
+  
+    case 200:
+      alertMessage = "Post Successful!";
+      backgroundColor = "green";
+      break;
+  
+    case 1:
+      alertMessage = "Redirecting...";
+      backgroundColor = "gray";
+      break;
+    default:
+      if(result.status)
+      {
+      alertMessage = "Post not Successful! - " + result.message;
+      backgroundColor = "red";
+      setTimeout(() => {
+        setResult({status:null,message:""})
+      },2500)
+    }
+      break;
   }
-
-  if (result === 1) {
-    const timer = setTimeout(() => {
-      navigate("/");
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }
-}, [result, navigate]);
-
-let alertMessage = "";
-let backgroundColor = "";
-
-switch (result) {
-  case 0:
-    alertMessage = "Processing...";
-    backgroundColor = "gray";
-    break;
-
-  case 200:
-    alertMessage = "Log in Successful!";
-    backgroundColor = "green";
-    break;
-
-  case 1:
-    alertMessage = "Redirecting...";
-    backgroundColor = "gray";
-    break;
-}
-    const isLoggedIn = useOutletContext();
-    if(!isLoggedIn)
-        return <Navigate to={"/login"}/>
+    if(!token) return <Navigate to={"/login"}/>
     return <main>
-    <div id="alert" className= {result!= null ? "show" : ""} style={{backgroundColor:backgroundColor}}>
+    <div id="alert" className= {result.status!= null ? "show" : ""} style={{backgroundColor:backgroundColor}}>
         {alertMessage}
     </div>
         <form onSubmit={handleSubmit}>
             <input type="text" name="title" id="title" required minLength={3} placeholder="Title" />
-                <Editor
+                <Editor textareaName="text"
                     apiKey={import.meta.env.VITE_TINY_KEY}
                     init={{
                         plugins: [
@@ -86,10 +91,10 @@ switch (result) {
                     initialValue="Blog text !"
                     />
             <div>
-                <button id="publish" className={result!= null ? "inactivebtn" : "button"}>
+                <button id="publish" className={result.status!= null ? "inactivebtn" : "button"}>
                     PUBLISH
                 </button>
-                <button className={result!= null ? "inactivebtn" : "button"} id="save">
+                <button className={result.status!= null ? "inactivebtn" : "button"} id="save">
                     SAVE AS DRAFT
                 </button>
             </div>
