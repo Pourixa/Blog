@@ -18,8 +18,6 @@ export default function Login()
       "Content-Type":"application/json"
     },body:JSON.stringify(Object.fromEntries(formData.entries()))})
 
-    if(!res.ok)
-      return setResult(res.json())
     const js = await res.json()
     const decode = jwtDecode(js.token);
     if(!decode.isAuthor)
