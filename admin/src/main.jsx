@@ -6,11 +6,13 @@ import New from './components/newBlog.jsx'
 import Manage from './components/manageBlog.jsx'
 import Login from './login.jsx'
 import Post from './components/post.jsx'
+import ErrorElem from './components/Error.jsx'
 
 const router = createBrowserRouter([
   {
     path:"/",
     element:<App/>,
+    errorElement:<ErrorElem/>,
     children:[
       {index:true , element:<Manage/>},
       {path:'/new' , element:<New/>},

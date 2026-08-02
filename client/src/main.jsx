@@ -6,10 +6,12 @@ import Home from './components/home.jsx';
 import Signup from './components/signup.jsx';
 import Login from './components/login.jsx';
 import Post from './components/post.jsx';
+import ErrorElem from './components/Error.jsx';
 const router = createBrowserRouter([
   {
     path:"/",
     element: <App/>,
+    errorElement:<ErrorElem/>,
     children:[
       {index:true,element:<Home/>},
       {path:"signup" , element:<Signup/>},

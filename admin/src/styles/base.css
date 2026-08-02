@@ -166,3 +166,22 @@ main {
 .blogHolder > *:not(:first-child){
     height: 1.5em;
 }
+
+.error {
+    background-color: var(--surface);
+    width: 25%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1em;
+    border: var(--border) 2px solid;
+    border-radius: 10px;
+    font-family: roboto;
+    text-align: center;
+}
+
+.error > a {
+    color: var(--text-primary);
+}

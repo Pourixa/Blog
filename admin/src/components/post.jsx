@@ -16,15 +16,16 @@ export default function Post() {
     const [blogText,setBlogText] = useState(null)
     const [blogTitle,setBlogTitle] = useState(null)
     const token = localStorage.getItem("admintoken")
+    const [error,setError] = useState(null)
 useEffect(() => {
     async function getBlog() {
         const data = await fetch(makeURL('/post/' + params.id),{headers:{
             Authorization:"Bearer " + token
         }})
         const comments = await fetch(makeURL("/post/"+params.id+"/comments"))
+        const blogData = await data.json()
+        blogData.comments = await comments.json()
         if (data.ok && comments.ok) {
-            const blogData = await data.json()
-            blogData.comments = await comments.json()
             setBlog(blogData)
             setDate(new Date(blogData.dateTime))
             setLikes(blogData.likes)
@@ -32,12 +33,15 @@ useEffect(() => {
             setBlogTitle(blogData.title)
             setLoading(false)
         } else {
-            throw new Error()
+            setError({status:blogData.code,statusText:blogData.message})
         }
     }
 
     getBlog()
 }, [params.id])
+
+if(error)
+    throw error
 
 return <main>
     {loading ? <VscLoading id="loading"/> : <form id="blog" onSubmit={(e) => {e.preventDefault()}} id="postView">
@@ -74,11 +78,15 @@ return <main>
                         />
     <h4> - {blog.userID}</h4>
     <button className="button" onClick={async () => {
-    await fetch(makeURL("/post/"+blog.id),{method:"put",headers:{
+    const res = await fetch(makeURL("/post/"+blog.id),{method:"put",headers:{
         "Authorization": "Bearer "+ localStorage.getItem("admintoken"),"Content-Type":"application/json"
     },body:JSON.stringify({text:blogText,title:blogTitle})
     })
-    location.reload()
+    if(res.ok)
+       return location.reload()
+    let err =await res.json()
+    setError( {status:err.code,statusText:err.message})
+
     }}>UPDATE</button>
     <div className="comments">
         {blog.comments.length === 0 ? <h4>No comments yet.</h4> : 

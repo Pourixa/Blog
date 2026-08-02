@@ -12,25 +12,30 @@ export default function Post() {
     const [blog,setBlog] = useState(null)
     const [date,setDate] = useState(null)
     const [likes,setLikes] = useState(null)
+    const [error, setError] = useState(null);
+
 
 useEffect(() => {
     async function getBlog() {
         const data = await fetch(makeURL('/post/' + params.id))
         const comments = await fetch(makeURL("/post/"+params.id+"/comments"))
+        const blogData = await data.json()
+        blogData.comments = await comments.json()
         if (data.ok && comments.ok) {
-            const blogData = await data.json()
-            blogData.comments = await comments.json()
             setBlog(blogData)
             setDate(new Date(blogData.dateTime))
             setLikes(blogData.likes)
             setLoading(false)
         } else {
-            throw new Error()
+            setError({status:blogData.code,statusText:blogData.message})
         }
     }
 
     getBlog()
 }, [params.id])
+
+    if(error)
+        throw error
 
 return <main>
     {loading ? <VscLoading id="loading"/> : <div id="postView">
@@ -70,7 +75,7 @@ return <main>
             const res = await fetch(makeURL('/post/' + params.id + "/like"), {method:"post",headers:{"Content-Type":"application/json" , "Authorization": "Bearer " + localStorage.getItem("token")}})
             if (res.ok)
                    setLikes(likes + 1)
-            else if (res.status === 401)
+            else if (res.status === 401 || res.status === 403)
                 location.href = "/login"
             else
                 throw new Error()
