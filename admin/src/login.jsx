@@ -17,6 +17,12 @@ export default function Login()
     const res = await fetch(makeURL("/login"),{method:"post",headers:{
       "Content-Type":"application/json"
     },body:JSON.stringify(Object.fromEntries(formData.entries()))})
+    if(!res.ok)
+      {
+        const err = await res.json()
+        err.status = err.code
+        return setResult(err)
+      }
 
     const js = await res.json()
     const decode = jwtDecode(js.token);
