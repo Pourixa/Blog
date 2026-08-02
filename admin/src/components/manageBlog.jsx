@@ -1,9 +1,9 @@
 import BlogHolder from "./blogHolder";
-import { Navigate, useOutletContext } from "react-router";
+import { Navigate } from "react-router";
 export default function Manage() {
-    const isLoggedIn = useOutletContext() 
-    if(!isLoggedIn)
-        return <Navigate to={"login"}/>
+    const token = localStorage.getItem("admintoken")
+    if(!token)
+        return <Navigate to={"/login"}/>
     return <main>
         <div id="blogsList">
             <BlogHolder/>

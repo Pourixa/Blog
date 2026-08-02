@@ -1,20 +1,20 @@
-import { Link } from "react-router"
+import { Link } from "react-router";
 
 export default function Header() {
-        return <header>
-            <Link to={"/"}>
-                <span>
-                    <h1>
-                        POURBLOG
-                    </h1>
-                    <h4>ADMIN</h4>
-                </span>
+
+    const token = localStorage.getItem("admintoken")
+    return <header>
+        <Link to={"/"}>
+            <h1>POURBLOG</h1>
+        </Link>
+        {!token ? <div>
+            <Link to={"login"}>
+            LOG IN
             </Link>
-            <Link to={"/new"}>
-            New Blog
+        </div> : <div>
+            <Link onClick={() => {localStorage.clear();location.reload()}}>
+            LOG OUT
             </Link>
-            <Link to={"logout"}>
-            LOGOUT
-             </Link>
-        </header>
-    }
+        </div>}
+    </header>
+}

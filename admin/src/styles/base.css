@@ -67,7 +67,7 @@ header > div {
     align-items: center;
 }
 
-header > a {
+header  a {
     text-decoration: none;
     color: var(--text-primary);
     font-size: larger;
