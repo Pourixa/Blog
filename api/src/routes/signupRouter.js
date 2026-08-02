@@ -31,7 +31,7 @@ signupRouter.post("/",body("username")
                 data:{username:req.body.username,
                 password:password}
             })
-            res.status(200).send("Sign-up-successful");
+            res.status(200).json({message:"Sign-up-successful"});
         }
         
     } catch(e)

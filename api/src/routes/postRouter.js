@@ -3,11 +3,17 @@ const postRouter = express.Router()
 const err = require("../lib/error")
 const db = require("../lib/prisma")
 const {authenticateToken} = require("../middleware/auth")
+const {jwtDecode} = require("jwt-decode")
 postRouter.get("/",async (req,res,next) => {
+    const token = req.headers.authorization?.split(" ")[1]
     try {
-        const posts = await db.prisma.post.findMany();
+        if(token && jwtDecode(token).isAuthor)
+            posts = await db.prisma.post.findMany();
+        else 
+            posts = await db.prisma.post.findMany({where:{isPublic:true}});
     res.json(posts)
     }catch(e) {
+        console.log(e)
         next(new err("Something went wrong." , 500))
     }
 })
@@ -36,8 +42,14 @@ postRouter.get("/:id/comments", async (req, res, next) => {
 
 postRouter.get("/:id",async (req,res,next) => {
     try {
+        const token = req.headers.authorization
         const post = await db.prisma.post.findUnique({where:{id:parseInt(req.params.id)}});
-    res.json(post)
+        if(post.isPublic)
+            res.json(post)
+        else if(token && jwtDecode(token).isAuthor)
+            res.json(post)
+        else
+            next(new err("NOT FOUND",404))
     }catch(e) {
         next(new err("Something went wrong." , 500))
     }
@@ -52,7 +64,7 @@ postRouter.post("/",authenticateToken,async (req,res,next) => {
         data:{
             title:req.body.title,
             text:req.body.text,
-            isPublic:true,
+            isPublic:req.body.isPublic,
             userID:req.user.username
         }
     })
@@ -72,6 +84,24 @@ postRouter.post("/:id/comments",authenticateToken,async (req,res,next) => {
         }})
         res.json("Comment added.")
     }catch(e) {
+        next(new err("Something went wrong." , 500))
+    }
+})
+
+postRouter.post("/:id/like",authenticateToken,async (req,res,next) => {
+    try {
+        await db.prisma.post.update({
+            where:{
+                id:parseInt (req.params.id)
+            },
+            data:{
+                likes:{
+                    increment:1
+                }
+        }})
+        res.json("like added.")
+    }catch(e) {
+        console.log(e)
         next(new err("Something went wrong." , 500))
     }
 })
@@ -184,6 +214,7 @@ postRouter.delete("/:id",authenticateToken, async (req,res,next) => {
         })
             res.json("Blog deleted.")
     } catch(e) {
+        console.log(e)
         next(new err("Something went wrong.",500))
     }
 })

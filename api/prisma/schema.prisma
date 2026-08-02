@@ -26,7 +26,7 @@ model comment {
   userID String
   user user @relation(fields: [userID],references: [username])
   postID Int
-  post post @relation(fields: [postID] , references: [id])
+  post post @relation(fields: [postID] , references: [id] ,onDelete:Cascade)
 }
 
 model post {
