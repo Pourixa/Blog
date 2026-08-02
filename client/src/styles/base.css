@@ -65,6 +65,11 @@ header {
     font-family: headers;
 }
 
+header > a {
+    text-decoration: none;
+    color:var(--text-primary)
+}
+
 header > div {
     display: flex;
     flex-grow: 0.25;

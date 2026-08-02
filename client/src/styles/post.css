@@ -73,7 +73,16 @@
     border: var(--border) 2px solid;
     border-radius: 10px;
 }
-.comment > div {
+
+
+.comment > div:last-of-type {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 2em;
+}
+
+.comment > div:first-of-type {
     display: flex;
     justify-content: space-between;
     align-items: center;

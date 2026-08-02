@@ -11,6 +11,8 @@ export default function Post() {
     const [loading,setLoading] = useState(true)
     const [blog,setBlog] = useState(null)
     const [date,setDate] = useState(null)
+    const [likes,setLikes] = useState(null)
+
 useEffect(() => {
     async function getBlog() {
         const data = await fetch(makeURL('/post/' + params.id))
@@ -20,6 +22,7 @@ useEffect(() => {
             blogData.comments = await comments.json()
             setBlog(blogData)
             setDate(new Date(blogData.dateTime))
+            setLikes(blogData.likes)
             setLoading(false)
         } else {
             throw new Error()
@@ -29,14 +32,13 @@ useEffect(() => {
     getBlog()
 }, [params.id])
 
-
 return <main>
     {loading ? <VscLoading/> : <div id="postView">
     <div>
         <h1>{blog.title}</h1>
         <div>
             <span><BiComment/>{blog.comments.length}</span>
-            <span><BsHeartFill/>{blog.likes}</span>
+            <span><BsHeartFill/>{likes}</span>
         </div>
         <h4>{date.toLocaleDateString("en-GB")}</h4>
     </div>
@@ -46,7 +48,7 @@ return <main>
         {blog.comments.length === 0 ? <h4>No comments yet.</h4> : 
         <>
         {blog.comments.map(comment => {
-            return <Comment comment={comment} key={comment.id}/>
+            return <Comment postID={params.id} pcomment={comment} key={comment.id}/>
         } )}
         </>}
         <form method="post" action={makeURL("/post/"+params.id+"/comments")} onSubmit={async (e) => {
@@ -67,7 +69,7 @@ return <main>
     <button className="button" onClick={async () => {
             const res = await fetch(makeURL('/post/' + params.id + "/like"), {method:"post",headers:{"Content-Type":"application/json" , "Authorization": "Bearer " + localStorage.getItem("token")}})
             if (res.ok)
-                location.reload()
+                   setLikes(likes + 1)
             else if (res.status === 401)
                 location.href = "/login"
             else
