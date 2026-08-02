@@ -10,14 +10,37 @@ export default function New() {
   const [result, setResult] = useState(temp);
   const navigate = useNavigate();
   const token = localStorage.getItem("admintoken")
-  async function handleSubmit(e) {
+  async function handleSubmit() {
 
-      e.preventDefault();
       setResult(prev => {return {...prev , status:0}});
-      const formData = new FormData(e.target)
+      const formData = new FormData(document.querySelector("#blog"))
       const res = await fetch(makeURL("/post"),{method:"post",headers:{
         "Content-Type":"application/json","Authorization" : "Bearer "+token
       },body:JSON.stringify(Object.fromEntries(formData.entries()))})
+  
+  
+      const js = await res.json()
+      setResult({status:res.status,message:js.message})
+      if (res.status === 200) {
+    setTimeout(() => {
+      setResult(prev => ({ ...prev, status: 1 }));
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    }, 1500);
+  }
+    }
+
+    async function handleDraft() {
+
+      setResult(prev => {return {...prev , status:0}});
+      const formData = new FormData(document.querySelector("#blog"))
+      const data = Object.fromEntries(formData.entries())
+      data.isPublic = false;
+      console.log(data)
+      const res = await fetch(makeURL("/post"),{method:"post",headers:{
+        "Content-Type":"application/json","Authorization" : "Bearer "+token
+      },body:JSON.stringify(data)})
   
   
       const js = await res.json()
@@ -66,7 +89,7 @@ export default function New() {
     <div id="alert" className= {result.status!= null ? "show" : ""} style={{backgroundColor:backgroundColor}}>
         {alertMessage}
     </div>
-        <form onSubmit={handleSubmit}>
+        <form id="blog" onSubmit={e=>{e.preventDefault()}}>
             <input type="text" name="title" id="title" required minLength={3} placeholder="Title" />
                 <Editor textareaName="text"
                     apiKey={import.meta.env.VITE_TINY_KEY}
@@ -91,10 +114,10 @@ export default function New() {
                     initialValue="Blog text !"
                     />
             <div>
-                <button id="publish" className={result.status!= null ? "inactivebtn" : "button"}>
+                <button onClick={handleSubmit} id="publish" className={result.status!= null ? "inactivebtn" : "button"}>
                     PUBLISH
                 </button>
-                <button className={result.status!= null ? "inactivebtn" : "button"} id="save">
+                <button onClick={handleDraft} className={result.status!= null ? "inactivebtn" : "button"} id="save">
                     SAVE AS DRAFT
                 </button>
             </div>

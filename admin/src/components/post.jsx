@@ -15,10 +15,12 @@ export default function Post() {
     const [likes,setLikes] = useState(null)
     const [blogText,setBlogText] = useState(null)
     const [blogTitle,setBlogTitle] = useState(null)
-
+    const token = localStorage.getItem("admintoken")
 useEffect(() => {
     async function getBlog() {
-        const data = await fetch(makeURL('/post/' + params.id))
+        const data = await fetch(makeURL('/post/' + params.id),{headers:{
+            Authorization:"Bearer " + token
+        }})
         const comments = await fetch(makeURL("/post/"+params.id+"/comments"))
         if (data.ok && comments.ok) {
             const blogData = await data.json()

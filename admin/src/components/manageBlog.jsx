@@ -10,7 +10,7 @@ export default function Manage() {
     const token = localStorage.getItem("admintoken")
     useEffect(()=> {
         async function getBlogs()  {
-            const data =await fetch(makeURL('/post'))
+            const data =await fetch(makeURL('/post'),{headers:{"authorization":"Bearer "+token}})
             if (data.ok) {
             setBlogs(await data.json())
             setLoading(false)
