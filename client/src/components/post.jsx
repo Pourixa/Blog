@@ -33,7 +33,7 @@ useEffect(() => {
 }, [params.id])
 
 return <main>
-    {loading ? <VscLoading/> : <div id="postView">
+    {loading ? <VscLoading id="loading"/> : <div id="postView">
     <div>
         <h1>{blog.title}</h1>
         <div>

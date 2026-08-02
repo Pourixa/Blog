@@ -100,6 +100,10 @@ footer {
 
 }
 
+footer > :last-child:hover {
+    cursor: pointer;
+}
+
 #root {
     display: flex;
     flex-direction: column;

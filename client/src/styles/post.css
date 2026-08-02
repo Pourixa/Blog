@@ -90,3 +90,15 @@
 }
 #postView > button {
 margin-top: 2em;}
+
+#loading {
+    width: 100px;
+    height: 100px;
+    animation: turn 1s ease  infinite forwards ;
+}
+
+@keyframes turn {
+    to{
+        transform: rotate(360deg);
+    }
+}
